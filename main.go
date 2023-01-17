@@ -1,12 +1,15 @@
 package main
 
 import (
-	server "simple-api/controller"
-	"simple-api/repository"
+	server "simple-api/server"
+	"simple-api/server/routes"
+	"simple-api/taskRepository"
 )
 
 func main() {
-	store := repository.NewStore()
-	s := server.NewServer(store)
+	store := taskRepository.NewStore()
+	getAllHandler := routes.NewGetAll(store)
+	s := server.NewServer()
+	s.RegisterHandlers([]routes.RouteHandler{getAllHandler})
 	s.Start()
 }

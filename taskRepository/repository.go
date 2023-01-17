@@ -1,33 +1,26 @@
-package repository
+package taskRepository
 
 import (
 	"errors"
-	"simple-api/entity/task"
+	"simple-api/entity/db"
 )
 
-type Storage interface {
-	Create(t task.Task) error
-	Get(id int) (task.Task, error)
-	Delete(id int) error
-	GetAll(limit uint, offset uint) ([]task.Task, error)
-}
-
 type store struct {
-	Tasks []task.Task
+	Tasks []db.Task
 }
 
-func (s *store) Create(t task.Task) error {
+func (s *store) Create(t db.Task) error {
 	s.Tasks = append(s.Tasks, t)
 	return nil
 }
 
-func (s *store) Get(id int) (task.Task, error) {
+func (s *store) Get(id int) (db.Task, error) {
 	for _, t := range s.Tasks {
 		if t.Id == id {
 			return t, nil
 		}
 	}
-	return task.Task{}, errors.New("cannot found task")
+	return db.Task{}, errors.New("cannot found task")
 }
 
 func (s *store) Delete(id int) error {
@@ -40,7 +33,7 @@ func (s *store) Delete(id int) error {
 	return errors.New("cannot delete: task not found")
 }
 
-func (s *store) GetAll(limit uint, offset uint) ([]task.Task, error) {
+func (s *store) GetAll(limit uint, offset uint) ([]db.Task, error) {
 
 	if limit > 100 {
 		return nil, errors.New("limit bigger then 100")
@@ -58,5 +51,5 @@ func (s *store) GetAll(limit uint, offset uint) ([]task.Task, error) {
 }
 
 func NewStore() Storage {
-	return &store{Tasks: make([]task.Task, 0, 0)}
+	return &store{Tasks: make([]db.Task, 0, 0)}
 }
